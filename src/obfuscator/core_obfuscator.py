@@ -1,6 +1,10 @@
 from typing import List, Dict, Union, BinaryIO
 from io import BytesIO
 from src.obfuscator.s3_handler import FileHandler
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 """
 Initialise the GDPRObfuscator class, the main class for handling PII data obfuscation in files, stored in s3 bucket.
@@ -18,10 +22,17 @@ class GDPRObfuscator:
         Raises: ValueError (if configuration is invaklid), FileNotFoundError (if s3 file does not exist).
         """
         
-
-
-        # self.validate_config(config)
-        # file_path - config["file_to_obfuscate"]
-        # pii_fields = config["pii_fields"]
+        if not isinstance(config, dict):
+            raise ValueError("Invalid configuration: config must be a dictionary")
         
-        # return self.s3_handler.obfuscate(config, file)
+        if "file_to_obfuscate" not in config:
+            raise ValueError("Invalid configuration: file_to_obfuscate is required")
+        
+        if "pii_fields" not in config:
+            raise ValueError("Invalid configuration: pii_fields is required")
+        
+        if not isinstance(config["pii_fields"], list):
+            raise ValueError("Invalid configuration: pii_fields must be a list")
+        
+        return self.s3_handler.process(config["file_to_obfuscate"], config["pii_fields"])
+        
