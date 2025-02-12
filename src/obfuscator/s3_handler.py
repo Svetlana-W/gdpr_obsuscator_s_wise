@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 # Processing s3 files for  CSV, JSON and Parquet formats.
 class FileHandler:
     def __init__(self):
-        self.s3 = boto3.client("s3")
+        self.s3_client = boto3.client("s3")
 
 
     # Processing file from the s3 bucket, obfuscating the PII fields.
@@ -24,8 +24,17 @@ class FileHandler:
         file_format = self.get_file_format(key)
 
         try:
-            #Getting file from s3 bucket
+            # Checking the file size.
+            response = self.s3_client.head_object(Bucket=bucket, Key=key)
+            file_size = response['ContentLength']
+            if file_size > 1_048_576:  # 1MB in bytes
+                raise ValueError("File size exceeds 1MB limit")
+
+            # Getting and processing file from s3 bucket
             response = self.s3_client.get_object(Bucket=bucket, Key=key)
+
+            if response['ContentLength'] == 0:
+                raise ValueError("File is empty")
 
             if file_format == "csv":
                 return self.process_csv(response["Body"], pii_fields)
@@ -118,7 +127,7 @@ class FileHandler:
         return bucket, key
     
     # Determine file format.
-    def file_format(self, file_path: str) -> str:
+    def get_file_format(self, file_path: str) -> str:
 
         if file_path.lower().endswith(".csv"):
             return "csv"
