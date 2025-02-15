@@ -1,9 +1,10 @@
 """
 Tests for core GDPR obfuscator functionality.
 """
+
 import pytest
 from io import BytesIO
-from src.obfuscator.core_obfuscator import GDPRObfuscator
+from src.core_obfuscator import GDPRObfuscator
 
 @pytest.fixture
 def obfuscator():
@@ -18,7 +19,7 @@ def valid_config():
 
 class TestGDPRObfuscator:
     def test_valid_config(self, obfuscator, valid_config, mocker):
-        # Mock S3 handler
+        # Mocking S3 handler
         mock_process = mocker.patch.object(
             obfuscator.s3_handler, 
             'process',

@@ -11,7 +11,7 @@ import json
 import pyarrow.parquet as pq
 from io import BytesIO
 from botocore.exceptions import ClientError
-from src.obfuscator.s3_handler import FileHandler
+from src.s3_handler import FileHandler
 
 @pytest.fixture
 def handler():
