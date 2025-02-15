@@ -1,5 +1,9 @@
 """
+<<<<<<< HEAD
 Tests for s3 file handler functionality.
+=======
+Tests for S3 file handler functionality.
+>>>>>>> 5648f1c (Updated primary setup for tests.)
 """
 import pytest
 import pandas as pd
@@ -7,7 +11,7 @@ import json
 import pyarrow.parquet as pq
 from io import BytesIO
 from botocore.exceptions import ClientError
-from src.obfuscator.s3_handler import FileHandler
+from src.s3_handler import FileHandler
 
 @pytest.fixture
 def handler():

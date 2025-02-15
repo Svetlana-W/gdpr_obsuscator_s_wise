@@ -19,37 +19,43 @@ class FileHandler:
 
     # Processing file from the s3 bucket, obfuscating the PII fields.
     def process(self, file_path: str, pii_fields: List[str]) -> BinaryIO:
-
-        bucket, key = self.parse_s3_path(file_path)
-        file_format = self.get_file_format(key)
-
         try:
-            # Checking the file size.
-            response = self.s3_client.head_object(Bucket=bucket, Key=key)
-            file_size = response['ContentLength']
-            if file_size > 1_048_576:  # 1MB in bytes
-                raise ValueError("File size exceeds 1MB limit")
+            bucket, key = self.parse_s3_path(file_path)
+            file_format = self.get_file_format(key)
 
-            # Getting and processing file from s3 bucket
-            response = self.s3_client.get_object(Bucket=bucket, Key=key)
+            try:
+                # Checking the file size.
+                response = self.s3_client.head_object(Bucket=bucket, Key=key)
+                file_size = response['ContentLength']
+                if file_size > 1_048_576:  # = 1MB in bytes
+                    raise ValueError("File size exceeds 1MB limit")
 
-            if response['ContentLength'] == 0:
-                raise ValueError("File is empty")
+                # Getting and processing file from s3 bucket
+                response = self.s3_client.get_object(Bucket=bucket, Key=key)
 
-            if file_format == "csv":
-                return self.process_csv(response["Body"], pii_fields)
-            elif file_format == "json":
-                return self.process_json(response["Body"], pii_fields)
-            elif file_format == "parquet":
-                return self.process_parquet(response["Body"], pii_fields)
-            else:
-                raise ValueError(f"Unsupported file format: {file_format}")
+                if response['ContentLength'] == 0:
+                    raise ValueError("File is empty")
 
-        except self.s3.exceptions.NoSuchKey:
-            raise FileNotFoundError(f"File not found: {file_path}")
+                if file_format == "csv":
+                    return self.process_csv(response["Body"], pii_fields)
+                elif file_format == "json":
+                    return self.process_json(response["Body"], pii_fields)
+                elif file_format == "parquet":
+                    return self.process_parquet(response["Body"], pii_fields)
+                else:
+                    raise ValueError(f"Unsupported file format: {file_format}")
+
+            except self.s3_client.exceptions.NoSuchKey:
+                raise FileNotFoundError(f"File not found: {file_path}")
+            except self.s3_client.exceptions.ClientError as e:
+                if e.response['Error']['Code'] == '404':
+                    raise FileNotFoundError(f"File not found: {file_path}")
+                raise
+
+        except ValueError as e:
+            raise ValueError(f"Invalid file path or format: {str(e)}")  # Re-raising ValueError from parse_s3_path or get_file_format
         except Exception as e:
-            logger.error(f"Error processing file: {str(e)}")
-            raise
+            raise ValueError(f"Error processing file: {str(e)}")  # Handling any other unexpected errors     
 
 
     # Processing CSV file.

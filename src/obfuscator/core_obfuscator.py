@@ -1,6 +1,6 @@
 from typing import List, Dict, Union, BinaryIO
 from io import BytesIO
-from obfuscator.s3_handler import FileHandler
+from obfuscator.s3_handler import FileHandler # type: ignore
 import logging
 
 logging.basicConfig(level=logging.INFO)
