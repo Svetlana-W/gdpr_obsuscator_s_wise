@@ -33,6 +33,14 @@ class GDPRObfuscator:
         if not config['pii_fields']:
             raise ValueError("pii_fields cannot be empty")
 
+
+    """
+    Obfuscating the PII fields in the cpecified file.
+    Args: config(dict): file_to_obfuscate (s3 path to input file), pii_fields (list of PII fields to obfuscate).
+    Returns: BinaryIO (byte stream of the obfuscated data).
+    Raises: ValueError (if configuration is invaklid), FileNotFoundError (if s3 file does not exist).
+    """
+    
     def obfuscate(self, config: Dict[str, Union[str, List[str]]]) -> BinaryIO:
 
         self._validate_config(config)
@@ -44,24 +52,4 @@ class GDPRObfuscator:
             config['file_to_obfuscate'],
             config['pii_fields']
         )
-
-
-        """
-        Obfuscating the PII fields in the cpecified file.
-        Args: config(dict): file_to_obfuscate (s3 path to input file), pii_fields (list of PII fields to obfuscate).
-        Returns: BinaryIO (byte stream of the obfuscated data).
-        Raises: ValueError (if configuration is invaklid), FileNotFoundError (if s3 file does not exist).
-        """
-        
-        def obfuscate(self, config: Dict[str, Union[str, List[str]]]) -> BinaryIO:
-
-            self._validate_config(config)
-            
-            if not isinstance(config['file_to_obfuscate'], str):
-                raise ValueError("file_to_obfuscate must be a string")
-                
-            return self.s3_handler.process(
-                config['file_to_obfuscate'],
-                config['pii_fields']
-            )
         
