@@ -7,6 +7,7 @@ import pyarrow.parquet as pq
 from io import BytesIO
 import logging
 from typing import List, Dict, Union, Tuple, BinaryIO
+from botocore.exceptions import ClientError
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,15 +21,15 @@ class FileHandler:
     # Processing file from the s3 bucket, obfuscating the PII fields.
     def process(self, file_path: str, pii_fields: List[str]) -> BinaryIO:
         try:
-            bucket, key = self.parse_s3_path(file_path)
-            file_format = self.get_file_format(key)
+            bucket, key = self._parse_s3_path(file_path)
+            file_format = self._get_file_format(key)
 
             try:
                 # Checking the file size.
                 response = self.s3_client.head_object(Bucket=bucket, Key=key)
                 file_size = response['ContentLength']
                 if file_size > 1_048_576:  # = 1MB in bytes
-                    raise ValueError("File size exceeds 1MB limit")
+                    raise ValueError("File size (1MB) exceeds limit")
 
                 # Getting and processing file from s3 bucket
                 response = self.s3_client.get_object(Bucket=bucket, Key=key)
@@ -45,15 +46,15 @@ class FileHandler:
                 else:
                     raise ValueError(f"Unsupported file format: {file_format}")
 
-            except self.s3_client.exceptions.NoSuchKey:
-                raise FileNotFoundError(f"File not found: {file_path}")
+            # except self.s3_client.exceptions.NoSuchKey:
+            #     raise FileNotFoundError(f"File not found: {file_path}")
             except self.s3_client.exceptions.ClientError as e:
-                if e.response['Error']['Code'] == '404':
+                if e.response['Error']['Code'] in ['NoSuchKey', '404']:
                     raise FileNotFoundError(f"File not found: {file_path}")
                 raise
 
-        except ValueError as e:
-            raise ValueError(f"Invalid file path or format: {str(e)}")  # Re-raising ValueError from parse_s3_path or get_file_format
+        except (ValueError, FileNotFoundError) as e:
+            raise  # Re-raising ValueError from parse_s3_path or get_file_format
         except Exception as e:
             raise ValueError(f"Error processing file: {str(e)}")  # Handling any other unexpected errors     
 
@@ -62,7 +63,12 @@ class FileHandler:
     def process_csv(self, file_content: BinaryIO, pii_fields: List[str]) -> BinaryIO:
 
         df = pd.read_csv(file_content)
-        return self.process_dataframe(df, pii_fields)
+        processed_df = self.process_dataframe(df, pii_fields)
+
+        output = BytesIO()
+        processed_df.to_csv(output, index=False)
+        output.seek(0)
+        return output
     
     # Processing JSON file.
     def process_json(self, file_content: BinaryIO, pii_fields: List[str]) -> BinaryIO:
@@ -111,7 +117,7 @@ class FileHandler:
         # Validating PII fields.
         missing_fields = [field for field in pii_fields if field not in df.columns]
         if missing_fields:
-            raise ValueError(f"PII field(s) not found in the file: {missing_fields}")
+            raise ValueError(f"Fields not found: {missing_fields}")
         
         # Obfuscating PII fields.
         for field in pii_fields:
@@ -121,19 +127,27 @@ class FileHandler:
     
 
     # Parsing the s3 path to get bucket and key.
-    def parse_s3_path(self, s3_path: str) -> Tuple[str, str]:
+    def _parse_s3_path(self, s3_path: str) -> Tuple[str, str]:
 
+        if not isinstance(s3_path, str):
+            raise ValueError("Invalid s3 path: path must be a string")
+        
         if not s3_path.startswith("s3://"):
-            raise ValueError("Invalid s3 path. It should start with 's3://'")
+            raise ValueError("Invalid s3 path: path must start with 's3://'")
         
         path = s3_path.replace('s3://', '')
-        bucket = path.split('/')[0]
-        key = '/'.join(path.split('/')[1:])
+        parts = path.split('/')
+
+        if len(parts) < 2 or not parts[0] or not parts[1:]:
+            raise ValueError("Invalid s3 path: must include bucket and key")
+
+        bucket = parts[0]
+        key = '/'.join(parts[1:])
         
         return bucket, key
     
     # Determine file format.
-    def get_file_format(self, file_path: str) -> str:
+    def _get_file_format(self, file_path: str) -> str:
 
         if file_path.lower().endswith(".csv"):
             return "csv"
