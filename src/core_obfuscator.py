@@ -43,11 +43,7 @@ class GDPRObfuscator:
     
     def obfuscate(self, config: Dict[str, Union[str, List[str]]]) -> BinaryIO:
 
-        self._validate_config(config)
-        
-        if not isinstance(config['file_to_obfuscate'], str):
-            raise ValueError("file_to_obfuscate must be a string")
-            
+        self._validate_config(config)    
         return self.s3_handler.process(
             config['file_to_obfuscate'],
             config['pii_fields']
