@@ -1,5 +1,5 @@
 from typing import List, Dict, Union, BinaryIO
-from src.s3_handler import FileHandler
+from s3_handler import FileHandler
 import logging
 
 logging.basicConfig(level=logging.INFO)

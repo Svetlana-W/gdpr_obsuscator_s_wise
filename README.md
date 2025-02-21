@@ -36,6 +36,6 @@ config = {
 result = obfuscator.obfuscate(config)
 
 # As a CLI
-python cli.py config.json --output-bucket my-bucket --output-key output/data.csv
+python src/cli.py config.json --output-bucket my-bucket --output-key output/data.csv
 
 
