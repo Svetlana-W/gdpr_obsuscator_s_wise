@@ -1,0 +1,9 @@
+README.md
+setup.py
+src/gdpr_obfuscator.egg-info/PKG-INFO
+src/gdpr_obfuscator.egg-info/SOURCES.txt
+src/gdpr_obfuscator.egg-info/dependency_links.txt
+src/gdpr_obfuscator.egg-info/requires.txt
+src/gdpr_obfuscator.egg-info/top_level.txt
+tests/test_core_obfuscator.py
+tests/test_s3_handler.py

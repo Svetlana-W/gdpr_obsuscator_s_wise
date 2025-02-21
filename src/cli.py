@@ -4,7 +4,7 @@ Command Line Interface (CLI) for GDPR Obfuscator.
 import click
 import json
 import boto3
-from src.core_obfuscator import GDPRObfuscator
+from core_obfuscator import GDPRObfuscator
 
 @click.command()
 @click.argument('config_file', type=click.Path(exists=True))
