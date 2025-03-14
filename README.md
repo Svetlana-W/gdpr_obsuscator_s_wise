@@ -96,10 +96,26 @@ Important: Before running `make run`, replace placeholder values in the `run` co
 
 
 ### Project Structure
-gdpr_obfuscator/ ├── src/ # Source code │ ├── gdpr_obfuscator/ # Python package directory │ │ ├── init.py # Makes gdpr_obfuscator a package │ │ ├── cli.py # Entry point for the Command-Line Interface (CLI) │ │ ├── core_obfuscator.py # Core obfuscation logic │ │ └── s3_handler.py # Handles s3 interactions ├── tests/ # Test files │ |── init.py |-- conftest.py # Pytest configuration |-- test_core_obfuscator.py # Tests for core obfuscation logic |-- test_s3_handler.py # Tests for s3_handler.py ├── requirements.txt # Project dependencies ├── setup.py # Project setup for installation |── Makefile # Makefile for simplified commands |-- README.md # This file is the README └── config.json # Example configuration file (Replace with your values)
 
-
-
+```tree
+gdpr_obfuscator/
+├── src/                 # Source code
+│   ├── gdpr_obfuscator/  # Python package directory 
+│   │   ├── __init__.py   # Makes gdpr_obfuscator a package
+│   │   ├── cli.py        # Entry point for the Command-Line Interface (CLI)
+│   │   ├── core_obfuscator.py  # Core obfuscation logic
+│   │   └── s3_handler.py       # Handles s3 interactions
+├── tests/               # Test files
+│   ├── __init__.py
+│   ├── conftest.py                 # Pytest configuration
+│   ├── test_core_obfuscator.py     # Tests for core obfuscation logic
+│   └── test_s3_handler.py          # Tests for s3_handler.py
+├── requirements.txt # Project dependencies
+├── setup.py         # Project setup for installation
+├── Makefile         # Makefile for simplified commands
+├── README.md        # This file is the README
+└── config.json      # Example configuration file (Replace with your values)
+```
 
 
 
