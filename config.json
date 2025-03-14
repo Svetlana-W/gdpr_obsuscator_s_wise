@@ -1,0 +1,4 @@
+{
+    "file_to_obfuscate": "s3://your-input-bucket/path/to/your/input.csv",
+    "pii_fields": ["name", "email_address", "phone_number"]
+}
