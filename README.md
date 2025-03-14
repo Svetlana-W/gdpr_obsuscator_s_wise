@@ -70,7 +70,7 @@ python src/cli.py config.json --output-bucket my-bucket --output-key output/data
 * `--output-bucket`: the s3 bucket to store the anonimised file
 * `--output-key`: path/key for the anonimised file within the s3 bucket
 
-# Example `config.json` (Replace placeholders with your actual s3 URI and PII fields):
+#### Example `config.json` (Replace placeholders with your actual s3 URI and PII fields):
 ``` json
 {
   "file_to_obfuscate": "s3://your-input-bucket/path/to/input.csv",
@@ -96,24 +96,8 @@ Important: Before running `make run`, replace placeholder values in the `run` co
 
 
 ### Project Structure
+gdpr_obfuscator/ ├── src/ # Source code │ ├── gdpr_obfuscator/ # Python package directory │ │ ├── init.py # Makes gdpr_obfuscator a package │ │ ├── cli.py # Entry point for the Command-Line Interface (CLI) │ │ ├── core_obfuscator.py # Core obfuscation logic │ │ └── s3_handler.py # Handles s3 interactions ├── tests/ # Test files │ |── init.py |-- conftest.py # Pytest configuration |-- test_core_obfuscator.py # Tests for core obfuscation logic |-- test_s3_handler.py # Tests for s3_handler.py ├── requirements.txt # Project dependencies ├── setup.py # Project setup for installation |── Makefile # Makefile for simplified commands |-- README.md # This file is the README └── config.json # Example configuration file (Replace with your values)
 
-gdpr_obfuscator/
-├── src/                 # Source code
-│   ├── gdpr_obfuscator/  # Python package directory 
-│   │   ├── __init__.py   # Makes gdpr_obfuscator a package
-│   │   ├── cli.py        # Entry point for the Command-Line Interface (CLI)
-│   │   ├── core_obfuscator.py  # Core obfuscation logic
-│   │   └── s3_handler.py       # Handles s3 interactions
-├── tests/               # Test files
-│   |── __init__.py
-    |-- conftest.py                 # Pytest configuration
-    |-- test_core_obfuscator.py     # Tests for core obfuscation logic
-    |-- test_s3_handler.py          # Tests for s3_handler.py
-├── requirements.txt # Project dependencies
-├── setup.py         # Project setup for installation
-|── Makefile         # Makefile for simplified commands
-|-- README.md        # This file is the README
-└── config.json      # Example configuration file (Replace with your values)
 
 
 
