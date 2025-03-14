@@ -113,6 +113,7 @@ gdpr_obfuscator/
 ├── setup.py         # Project setup
 |── Makefile         # Makefile
 |-- README.md        # This file is the README
+└── config.json      # Configuration file (Replace with real values)
 
 
 

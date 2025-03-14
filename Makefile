@@ -8,8 +8,10 @@ WD := $(shell pwd)
 PYTHONPATH := $(WD)/src
 TESTS := $(WD)/tests
 VENV := $(WD)/venv
+VENV_PATH := $(VENV)/bin
 SHELL := /bin/bash
-PIP := $(VENV)/bin/pip
+PIP := $(VENV_PATH)/pip
+PYTEST := $(VENV_PATH)/pytest
 
 # Default target
 all: help
@@ -21,43 +23,44 @@ venv:
 	@echo "Virtual environment created."
 
 # Install dependencies
-install:
+install: venv
 	@echo "Installing dependencies..."
 	pip install -r requirements.txt
 
 # Run tests
-test:
+test: venv
 	@echo "Running tests..."
-	pytest
+	$(PYTEST) tests
+	@echo "Tests finished running."
 
-# Run the application 
-run:
-	@echo "Running the application..."
-	$(PYTHON) src/core_obfuscator.py  
+# Run the application ** REPLACE with your actual values **
+run: venv
+	@echo "Running the application..." 
+	$(VENV_PATH)/python src/cli.py config.json --output-bucket your-bucket-name --output-key output/data.csv 
 	@echo "Application finished running."
 
 # Format code using black
-format:
+format: venv
 	@echo "Formatting code..."
 	black src tests
 
 # Lint code using flake8
-lint:
+lint: venv
 	@echo "Linting code..."
 	flake8 src tests
 
 # Clean up temporary files and build artifacts
-clean:
+clean: venv
 	@echo "Cleaning up..."
 	rm -rf .pytest_cache __pycache__ tests/__pycache__ src/__pycache__ dist build *.egg-info
 
 # Generate documentation (optional - adapt to your documentation generator)
-docs:
+docs: venv
 	@echo "Generating documentation..."
 	sphinx-build -b html docs docs/_build
 
 # Help target (displays available commands)
-help:
+help: venv
 	@echo "Available make commands:"
 	@echo "  venv      Create virtual environment"
 	@echo "  install   Install project dependencies"
