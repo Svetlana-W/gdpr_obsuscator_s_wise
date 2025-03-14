@@ -21,20 +21,19 @@ class GDPRObfuscator:
         if not isinstance(config, dict):
             raise ValueError("Config must be a dictionary")
 
-        required_keys = {'file_to_obfuscate', 'pii_fields'}
+        required_keys = {"file_to_obfuscate", "pii_fields"}
         missing_keys = required_keys - set(config.keys())
         if missing_keys:
             raise ValueError(f"Missing required keys: {missing_keys}")
 
-        if not isinstance(config['file_to_obfuscate'], str):
+        if not isinstance(config["file_to_obfuscate"], str):
             raise ValueError("file_to_obfuscate must be a string")
 
-        if not isinstance(config['pii_fields'], list):
+        if not isinstance(config["pii_fields"], list):
             raise ValueError("pii_fields must be a list")
 
-        if not config['pii_fields']:
+        if not config["pii_fields"]:
             raise ValueError("pii_fields cannot be empty")
-
 
     """
     Obfuscating the PII fields in the cpecified file.
@@ -45,9 +44,7 @@ class GDPRObfuscator:
 
     def obfuscate(self, config: Dict[str, Union[str, List[str]]]) -> BinaryIO:
 
-        self._validate_config(config)    
+        self._validate_config(config)
         return self.s3_handler.process(
-            config['file_to_obfuscate'],
-            config['pii_fields']
+            config["file_to_obfuscate"], config["pii_fields"]
         )
-        
