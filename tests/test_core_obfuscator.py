@@ -36,26 +36,24 @@ class TestGDPRObfuscator:
         "invalid_config,error_msg",
         [
             (None, "Config must be a dictionary"),
-            ({}, "Missing required keys: {'file_to_obfuscate', 'pii_fields'}"),
-            (
-                {"file_to_obfuscate": "s3://bucket/file.csv"},
-                "Missing required keys: {'pii_fields'}",
-            ),
-            ({"pii_fields": ["name"]}, "Missing required keys: {'file_to_obfuscate'}"),
-            (
-                {"file_to_obfuscate": "s3://bucket/file.csv", "pii_fields": "name"},
-                "pii_fields must be a list",
-            ),
-            (
-                {"file_to_obfuscate": "s3://bucket/file.csv", "pii_fields": []},
-                "pii_fields cannot be empty",
-            ),
-            (
-                {"file_to_obfuscate": 123, "pii_fields": ["name"]},
-                "file_to_obfuscate must be a string",
-            ),
+            ({}, "Missing required key: file_to_obfuscate"),
+            ({"file_to_obfuscate": "s3://bucket/file.csv"}, "Missing required key: pii_fields"),
+            ({"pii_fields": ["name"]}, "Missing required key: file_to_obfuscate"),
+        (
+            {"file_to_obfuscate": "s3://bucket/file.csv", "pii_fields": "name"},
+            "pii_fields must be a list",
+        ),
+        (
+            {"file_to_obfuscate": "s3://bucket/file.csv", "pii_fields": []},
+            "pii_fields cannot be empty",
+        ),
+        (
+            {"file_to_obfuscate": 123, "pii_fields": ["name"]},
+            "file_to_obfuscate must be a string",
+        ),
         ],
     )
+
     def test_invalid_configs(self, obfuscator, invalid_config, error_msg):
         with pytest.raises(ValueError, match=error_msg):
             obfuscator.obfuscate(invalid_config)

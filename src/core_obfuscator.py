@@ -17,23 +17,35 @@ class GDPRObfuscator:
 
     # Validating the configuration dictionary
     def _validate_config(self, config: Dict[str, Union[str, List[str]]]) -> None:
-
         if not isinstance(config, dict):
             raise ValueError("Config must be a dictionary")
-
-        required_keys = {"file_to_obfuscate", "pii_fields"}
-        missing_keys = required_keys - set(config.keys())
-        if missing_keys:
-            raise ValueError(f"Missing required keys: {missing_keys}")
-
-        if not isinstance(config["file_to_obfuscate"], str):
+        
+        if "file_to_obfuscate" not in config:
+            raise ValueError("Missing required key: file_to_obfuscate")
+        elif not isinstance(config["file_to_obfuscate"], str):
             raise ValueError("file_to_obfuscate must be a string")
 
-        if not isinstance(config["pii_fields"], list):
+        if "pii_fields" not in config:
+            raise ValueError("Missing required key: pii_fields")
+        elif not isinstance(config["pii_fields"], list):
             raise ValueError("pii_fields must be a list")
-
-        if not config["pii_fields"]:
+        elif not config["pii_fields"]:
             raise ValueError("pii_fields cannot be empty")
+
+
+        # required_keys = {"file_to_obfuscate", "pii_fields"}
+        # missing_keys = required_keys - set(config.keys())
+        # if missing_keys:
+        #     raise ValueError(f"Missing required keys: {missing_keys}")
+
+        # if not isinstance(config["file_to_obfuscate"], str):
+        #     raise ValueError("file_to_obfuscate must be a string")
+
+        # if not isinstance(config["pii_fields"], list):
+        #     raise ValueError("pii_fields must be a list")
+
+        # if not config["pii_fields"]:
+        #     raise ValueError("pii_fields cannot be empty")
 
     """
     Obfuscating the PII fields in the cpecified file.
