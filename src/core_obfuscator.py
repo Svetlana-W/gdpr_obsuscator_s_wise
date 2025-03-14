@@ -33,20 +33,6 @@ class GDPRObfuscator:
             raise ValueError("pii_fields cannot be empty")
 
 
-        # required_keys = {"file_to_obfuscate", "pii_fields"}
-        # missing_keys = required_keys - set(config.keys())
-        # if missing_keys:
-        #     raise ValueError(f"Missing required keys: {missing_keys}")
-
-        # if not isinstance(config["file_to_obfuscate"], str):
-        #     raise ValueError("file_to_obfuscate must be a string")
-
-        # if not isinstance(config["pii_fields"], list):
-        #     raise ValueError("pii_fields must be a list")
-
-        # if not config["pii_fields"]:
-        #     raise ValueError("pii_fields cannot be empty")
-
     """
     Obfuscating the PII fields in the cpecified file.
     Args: config(dict): file_to_obfuscate (s3 path to input file), pii_fields (list of PII fields to obfuscate).

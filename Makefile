@@ -11,7 +11,7 @@ VENV := $(WD)/venv
 SHELL := /bin/bash
 PIP := $(VENV)/bin/pip
 
-# Default target, runs when you just type 'make' in the terminal
+# Default target
 all: help
 
 # Create virtual environment
