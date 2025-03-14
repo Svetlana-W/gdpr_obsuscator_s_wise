@@ -6,6 +6,7 @@ import json
 import boto3
 from core_obfuscator import GDPRObfuscator
 
+
 @click.command()
 @click.argument('config_file', type=click.Path(exists=True))
 @click.option('--output-bucket', required=True, help='S3 bucket for output')
@@ -16,7 +17,7 @@ def main(config_file: str, output_bucket: str, output_key: str):
         # Reading config
         with open(config_file, 'r') as f:
             config = json.load(f)
-        
+
         # Processing file
         obfuscator = GDPRObfuscator()
         output_stream = obfuscator.obfuscate(config)
@@ -28,12 +29,13 @@ def main(config_file: str, output_bucket: str, output_key: str):
             Key=output_key,
             Body=output_stream
         )
-        
+
         click.echo(f"File processed and saved to s3://{output_bucket}/{output_key}")
         
     except Exception as e:
         click.echo(f"Error: {str(e)}", err=True)
         raise click.Abort()
+
 
 if __name__ == '__main__':
     main()

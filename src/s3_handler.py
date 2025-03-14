@@ -6,8 +6,8 @@ import json
 import pyarrow.parquet as pq
 from io import BytesIO
 import logging
-from typing import List, Dict, Union, Tuple, BinaryIO
-from botocore.exceptions import ClientError
+from typing import List, Tuple, BinaryIO
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 class FileHandler:
     def __init__(self):
         self.s3_client = boto3.client("s3")
-
 
     # Processing file from the s3 bucket, obfuscating the PII fields.
     def process(self, file_path: str, pii_fields: List[str]) -> BinaryIO:
@@ -125,7 +124,6 @@ class FileHandler:
 
         return df
     
-
     # Parsing the s3 path to get bucket and key.
     def _parse_s3_path(self, s3_path: str) -> Tuple[str, str]:
 
@@ -157,4 +155,3 @@ class FileHandler:
             return "parquet"
         else:
             raise ValueError("Unsupported file format")
-

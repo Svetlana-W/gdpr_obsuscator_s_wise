@@ -35,13 +35,13 @@ run:
 	@echo "Running the application..."
 	$(PYTHON) src/core_obfuscator.py  
 	@echo "Application finished running."
-	
-# Format code using black (optional)
+
+# Format code using black
 format:
 	@echo "Formatting code..."
 	black src tests
 
-# Lint code using flake8 (optional)
+# Lint code using flake8
 lint:
 	@echo "Linting code..."
 	flake8 src tests

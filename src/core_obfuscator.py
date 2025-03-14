@@ -6,8 +6,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 """
-Initialise the GDPRObfuscator class: the main class for handling PII data obfuscation in files, stored in s3 bucket.
+Initialise the GDPRObfuscator class: 
+the main class for handling PII data obfuscation in files, stored in s3 bucket.
 """
+
 
 class GDPRObfuscator:
     def __init__(self):
@@ -40,7 +42,7 @@ class GDPRObfuscator:
     Returns: BinaryIO (byte stream of the obfuscated data).
     Raises: ValueError (if configuration is invaklid), FileNotFoundError (if s3 file does not exist).
     """
-    
+
     def obfuscate(self, config: Dict[str, Union[str, List[str]]]) -> BinaryIO:
 
         self._validate_config(config)    
