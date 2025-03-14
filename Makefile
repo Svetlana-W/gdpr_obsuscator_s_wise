@@ -7,11 +7,18 @@ PYTHON := python3
 WD := $(shell pwd)
 PYTHONPATH := $(WD)/src
 TESTS := $(WD)/tests
+VENV := $(WD)/venv
 SHELL := /bin/bash
-PIP := pip
+PIP := $(VENV)/bin/pip
 
 # Default target, runs when you just type 'make' in the terminal
 all: help
+
+# Create virtual environment
+venv:
+	@echo "Creating virtual environment..."
+	$(PYTHON) -m venv venv
+	@echo "Virtual environment created."
 
 # Install dependencies
 install:
@@ -52,7 +59,8 @@ docs:
 # Help target (displays available commands)
 help:
 	@echo "Available make commands:"
-	@echo "  install    Install project dependencies"
+	@echo "  venv      Create virtual environment"
+	@echo "  install   Install project dependencies"
 	@echo "  test      Run tests"
 	@echo "  run       Run the application"
 	@echo "  format    Format code using black"

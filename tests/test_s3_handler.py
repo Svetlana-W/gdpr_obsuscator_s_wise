@@ -1,9 +1,5 @@
 """
-<<<<<<< HEAD
 Tests for s3 file handler functionality.
-=======
-Tests for S3 file handler functionality.
->>>>>>> 5648f1c (Updated primary setup for tests.)
 """
 import pytest
 import pandas as pd
